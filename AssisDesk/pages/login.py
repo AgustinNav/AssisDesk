@@ -1,17 +1,26 @@
 """The home page of the app."""
-
 import reflex as rx
-
 from AssisDesk_API.templates import template
+import requests
+
+
+class LoginState(rx.State):
+    username: str = ""
+    password: str = ""
+    token: str = ""
+    is_logged_in: bool = False
+
+    def login(self):
+        response = requests.post("http://localhost:8000/token", data={"username": self.username, "password": self.password})
+        if response.status_code == 200:
+            self.token = response.json()["access_token"]
+            self.is_logged_in = True
+        else:
+            rx.window_alert("Invalid credentials")
 
 
 @template(route="/login", title="Log In")
 def login() -> rx.Component:
-    """The home page.
-
-    Returns:
-        The UI for the home page.
-    """
 
     return rx.card(
         rx.vstack(
@@ -46,6 +55,7 @@ def login() -> rx.Component:
                     type="email",
                     size="3",
                     width="100%",
+                    on_blur=LoginState.set_username
                 ),
                 justify="start",
                 spacing="2",
@@ -71,11 +81,12 @@ def login() -> rx.Component:
                     type="password",
                     size="3",
                     width="100%",
+                    on_blur=LoginState.set_password
                 ),
                 spacing="2",
                 width="100%",
             ),
-            rx.button("Sign in", size="3", width="100%"),
+            rx.button("Sign in", on_click=LoginState.login, size="3", width="100%"),
             rx.center(
                 rx.text("New here?", size="3"),
                 rx.link("Sign up", href="#", size="3"),
