@@ -1,7 +1,8 @@
-reflex
 fastapi
 uvicorn
-psycopg2-binary
-SQLAlchemy
-passlib
+sqlalchemy
 pydantic
+passlib[bcrypt]
+python-jose
+psycopg2-binary
+reflex
