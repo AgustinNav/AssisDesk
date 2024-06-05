@@ -1,1 +1,7 @@
-reflex==0.5.3
+reflex
+fastapi
+uvicorn
+psycopg2-binary
+SQLAlchemy
+passlib
+pydantic
